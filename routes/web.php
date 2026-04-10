@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TempatBerobatController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,4 +29,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/pasien/{pasien}', [PasienController::class, 'destroy'])->name('pasien.destroy');
     Route::get('/pasien/{pasien}/edit', [PasienController::class, 'edit'])->name('pasien.edit');
     Route::put('/pasien/{pasien}', [PasienController::class, 'update'])->name('pasien.update');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Rute Pasien yang sudah ada...
+
+    // Rute Master Tempat Berobat
+    Route::get('/tempat-berobat', [TempatBerobatController::class, 'index'])->name('tempat.index');
+    Route::get('/tempat-berobat/create', [TempatBerobatController::class, 'create'])->name('tempat.create');
+    Route::post('/tempat-berobat', [TempatBerobatController::class, 'store'])->name('tempat.store');
+    Route::delete('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'destroy'])->name('tempat.destroy');
+    Route::get('/tempat-berobat/{tempatBerobat}/edit', [TempatBerobatController::class, 'edit'])->name('tempat.edit');
+    Route::put('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'update'])->name('tempat.update');
+});
+use App\Http\Controllers\PendaftaranController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::get('/pendaftaran/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+    Route::delete('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
+    Route::get('/pendaftaran/{pendaftaran}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
+    Route::put('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
 });
