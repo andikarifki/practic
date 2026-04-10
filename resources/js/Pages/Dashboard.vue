@@ -15,7 +15,7 @@ const totalMedicalRecord = ref(350);
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard Statistik Klinik
+                Statistik Halaman Utama
             </h2>
         </template>
 

@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'update'])->name('tempat.update');
 });
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\RiwayatMedisController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
@@ -51,4 +52,19 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::get('/pendaftaran/{pendaftaran}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
     Route::put('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+});
+Route::middleware(['auth', 'verified'])->group(function () {
+    // ... route pendaftaran atau dashboard kamu yang lain ...
+
+    // Route untuk menampilkan daftar riwayat (Index)
+    Route::get('/riwayat-medis', [RiwayatMedisController::class, 'index'])
+        ->name('riwayat.index');
+
+    // Route untuk menampilkan detail satu riwayat (Show)
+    Route::get('/riwayat-medis/{id}', [RiwayatMedisController::class, 'show'])
+        ->name('riwayat.show');
+
+    // Route untuk menghapus (Destroy) jika diperlukan
+    Route::delete('/riwayat-medis/{id}', [RiwayatMedisController::class, 'destroy'])
+        ->name('riwayat.destroy');
 });

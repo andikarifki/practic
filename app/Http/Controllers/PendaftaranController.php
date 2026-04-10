@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Pasien;
 use App\Models\Pendaftaran;
-use App\Models\TempatBerobat;
+use App\Models\RekamMedis;
+use App\Models\TempatBerobat; // 1. IMPORT MODEL REKAM MEDIS
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +14,7 @@ class PendaftaranController extends Controller
     public function index()
     {
         return Inertia::render('Pendaftaran/Index', [
-            // Kita ambil data pendaftaran beserta relasi pasien dan tempatnya
+            // Mengambil data pendaftaran beserta relasi pasien dan tempatnya
             'pendaftarans' => Pendaftaran::with(['pasien', 'tempat_berobat'])->latest()->get(),
         ]);
     }
@@ -21,7 +22,6 @@ class PendaftaranController extends Controller
     public function create()
     {
         return Inertia::render('Pendaftaran/Create', [
-            // Kita kirim data pasien dan tempat untuk isi dropdown di form
             'pasiens' => Pasien::select('id', 'nama')->get(),
             'tempats' => TempatBerobat::select('id', 'nama_tempat')->get(),
         ]);
@@ -34,19 +34,12 @@ class PendaftaranController extends Controller
             'tempat_berobat_id' => 'required|exists:tempat_berobats,id',
             'tanggal_periksa' => 'required|date',
             'status' => 'required|string',
-            'keluhan' => 'nullable|string', // <--- TAMBAHKAN BARIS INI
+            'keluhan' => 'nullable|string',
         ]);
 
         Pendaftaran::create($validated);
 
         return redirect()->route('pendaftaran.index')->with('message', 'Pendaftaran berhasil dibuat!');
-    }
-
-    public function destroy(Pendaftaran $pendaftaran)
-    {
-        $pendaftaran->delete();
-
-        return redirect()->back();
     }
 
     public function edit(Pendaftaran $pendaftaran)
@@ -60,16 +53,43 @@ class PendaftaranController extends Controller
 
     public function update(Request $request, Pendaftaran $pendaftaran)
     {
+        // 2. VALIDASI DATA (Termasuk data rekam medis jika status 'Selesai')
         $validated = $request->validate([
             'pasien_id' => 'required|exists:pasiens,id',
             'tempat_berobat_id' => 'required|exists:tempat_berobats,id',
             'tanggal_periksa' => 'required|date',
             'status' => 'required|string',
             'keluhan' => 'nullable|string',
+
+            // Tambahkan validasi diagnosa & obat jika status diubah ke Selesai
+            'diagnosa' => 'required_if:status,Selesai',
+            'obat' => 'required_if:status,Selesai',
+            'catatan_dokter' => 'nullable|string',
         ]);
 
+        // 3. UPDATE DATA PENDAFTARAN
         $pendaftaran->update($validated);
 
+        // 4. LOGIKA PEMINDAHAN KE REKAM MEDIS
+        if ($request->status === 'Selesai') {
+            RekamMedis::updateOrCreate(
+                ['pendaftaran_id' => $pendaftaran->id], // Cari berdasarkan ID pendaftaran
+                [
+                    'pasien_id' => $pendaftaran->pasien_id,
+                    'diagnosa' => $request->diagnosa,
+                    'obat' => $request->obat,
+                    'catatan_dokter' => $request->catatan_dokter,
+                ]
+            );
+        }
+
         return redirect()->route('pendaftaran.index')->with('message', 'Data berhasil diperbarui!');
+    }
+
+    public function destroy(Pendaftaran $pendaftaran)
+    {
+        $pendaftaran->delete();
+
+        return redirect()->back()->with('message', 'Data berhasil dihapus!');
     }
 }

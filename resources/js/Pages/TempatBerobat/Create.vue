@@ -2,31 +2,23 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
 
-defineProps({
-    pasiens: Array,
-    tempats: Array,
-});
-
 const form = useForm({
-    pasien_id: "",
-    tempat_berobat_id: "",
-    tanggal_periksa: "",
-    keluhan: "",
-    status: "Antri",
+    nama_tempat: "",
+    alamat: "",
 });
 
 const submit = () => {
-    form.post(route("pendaftaran.store"));
+    form.post(route("tempat.store"));
 };
 </script>
 
 <template>
-    <Head title="Pendaftaran Baru" />
+    <Head title="Tambah Tempat Berobat" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-emerald-800 leading-tight">
-                Pendaftaran Baru
+                Tambah Tempat Praktik Dokter
             </h2>
         </template>
 
@@ -39,118 +31,45 @@ const submit = () => {
                         <div>
                             <label
                                 class="block font-medium text-sm text-gray-700"
-                                >Pilih Pasien</label
-                            >
-                            <select
-                                v-model="form.pasien_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
-                                required
-                            >
-                                <option value="" disabled>
-                                    -- Pilih Pasien --
-                                </option>
-                                <option
-                                    v-for="p in pasiens"
-                                    :key="p.id"
-                                    :value="p.id"
-                                >
-                                    {{ p.nama }}
-                                </option>
-                            </select>
-                            <div
-                                v-if="form.errors.pasien_id"
-                                class="text-red-500 text-xs mt-1"
-                            >
-                                {{ form.errors.pasien_id }}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label
-                                class="block font-medium text-sm text-gray-700"
-                                >Tempat Praktik</label
-                            >
-                            <select
-                                v-model="form.tempat_berobat_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
-                                required
-                            >
-                                <option value="" disabled>
-                                    -- Pilih Lokasi --
-                                </option>
-                                <option
-                                    v-for="t in tempats"
-                                    :key="t.id"
-                                    :value="t.id"
-                                >
-                                    {{ t.nama_tempat }}
-                                </option>
-                            </select>
-                            <div
-                                v-if="form.errors.tempat_berobat_id"
-                                class="text-red-500 text-xs mt-1"
-                            >
-                                {{ form.errors.tempat_berobat_id }}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label
-                                class="block font-medium text-sm text-gray-700"
-                                >Tanggal Periksa</label
+                                >Nama Tempat Praktik / Klinik</label
                             >
                             <input
-                                v-model="form.tanggal_periksa"
-                                type="date"
+                                v-model="form.nama_tempat"
+                                type="text"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                placeholder="Contoh: Apotek Mojosongo"
                                 required
                             />
                             <div
-                                v-if="form.errors.tanggal_periksa"
+                                v-if="form.errors.nama_tempat"
                                 class="text-red-500 text-xs mt-1"
                             >
-                                {{ form.errors.tanggal_periksa }}
+                                {{ form.errors.nama_tempat }}
                             </div>
                         </div>
 
                         <div>
                             <label
                                 class="block font-medium text-sm text-gray-700"
-                                >Keluhan</label
+                                >Alamat Lengkap</label
                             >
                             <textarea
-                                v-model="form.keluhan"
-                                rows="3"
+                                v-model="form.alamat"
+                                rows="4"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
-                                placeholder="Tuliskan keluhan pasien di sini..."
+                                placeholder="Masukkan alamat lengkap tempat praktik..."
                             ></textarea>
                             <div
-                                v-if="form.errors.keluhan"
+                                v-if="form.errors.alamat"
                                 class="text-red-500 text-xs mt-1"
                             >
-                                {{ form.errors.keluhan }}
+                                {{ form.errors.alamat }}
                             </div>
-                        </div>
-
-                        <div>
-                            <label
-                                class="block font-medium text-sm text-gray-700"
-                                >Status</label
-                            >
-                            <select
-                                v-model="form.status"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
-                                required
-                            >
-                                <option value="Antri">Antri</option>
-                                <option value="Selesai">Selesai</option>
-                                <option value="Batal">Batal</option>
-                            </select>
                         </div>
 
                         <div class="flex items-center justify-end mt-4">
                             <Link
-                                :href="route('pendaftaran.index')"
+                                :href="route('tempat.index')"
                                 class="text-sm text-gray-600 hover:text-gray-900 underline mr-4"
                             >
                                 Batal
@@ -161,7 +80,7 @@ const submit = () => {
                                 class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-bold shadow-md transition"
                                 :class="{ 'opacity-25': form.processing }"
                             >
-                                Simpan Pendaftaran
+                                Simpan Tempat
                             </button>
                         </div>
                     </form>
