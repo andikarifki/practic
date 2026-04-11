@@ -44,10 +44,13 @@ class PendaftaranController extends Controller
 
     public function edit(Pendaftaran $pendaftaran)
     {
+        // Memuat relasi rekam_medis yang baru saja kita buat di model
+        $pendaftaran->load('rekam_medis');
+
         return Inertia::render('Pendaftaran/Edit', [
             'pendaftaran' => $pendaftaran,
-            'pasiens' => Pasien::select('id', 'nama')->get(),
-            'tempats' => TempatBerobat::select('id', 'nama_tempat')->get(),
+            'pasiens' => Pasien::all(),
+            'tempats' => TempatBerobat::all(),
         ]);
     }
 

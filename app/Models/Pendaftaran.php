@@ -26,4 +26,14 @@ class Pendaftaran extends Model
     {
         return $this->belongsTo(TempatBerobat::class);
     }
+
+    /**
+     * Tambahkan relasi ini agar data dari tabel rekam_medis bisa dibaca
+     * Pastikan nama fungsinya 'rekam_medis' agar cocok dengan load() di Controller
+     */
+    public function rekam_medis()
+    {
+        // Pastikan kolom pendaftaran_id ada di tabel rekam_medis
+        return $this->hasOne(RekamMedis::class, 'pendaftaran_id');
+    }
 }

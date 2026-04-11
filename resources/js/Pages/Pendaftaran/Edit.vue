@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
+import { watch } from "vue";
 
 const props = defineProps({
     pendaftaran: Object,
@@ -15,14 +16,29 @@ const form = useForm({
     keluhan: props.pendaftaran.keluhan || "",
     status: props.pendaftaran.status,
 
-    // TAMBAHKAN FIELD BARU UNTUK REKAM MEDIS
-    diagnosa: "",
-    obat: "",
-    catatan_dokter: "",
+    // MENGAMBIL DATA DARI RELASI TABEL REKAM_MEDIS
+    // Menggunakan optional chaining (?.) agar tidak error jika rekam_medis belum ada
+    diagnosa: props.pendaftaran.rekam_medis?.diagnosa || "",
+    obat: props.pendaftaran.rekam_medis?.obat || "",
+    catatan_dokter: props.pendaftaran.rekam_medis?.catatan_dokter || "",
 });
 
+// Otomatis fokus atau beri peringatan jika status pindah ke Selesai
+watch(
+    () => form.status,
+    (newStatus) => {
+        if (newStatus === "Selesai") {
+            alert("Silakan lengkapi Diagnosa dan Resep Obat.");
+        }
+    },
+);
+
 const submit = () => {
-    form.put(route("pendaftaran.update", props.pendaftaran.id));
+    form.put(route("pendaftaran.update", props.pendaftaran.id), {
+        onSuccess: () => {
+            // Logika tambahan jika diperlukan setelah sukses
+        },
+    });
 };
 </script>
 
@@ -129,11 +145,25 @@ const submit = () => {
 
                         <div
                             v-if="form.status === 'Selesai'"
-                            class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg space-y-4"
+                            class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg space-y-4 shadow-inner"
                         >
                             <h3
-                                class="font-bold text-emerald-800 text-sm uppercase tracking-wider"
+                                class="font-bold text-emerald-800 text-sm uppercase tracking-wider flex items-center"
                             >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
                                 Hasil Pemeriksaan Dokter
                             </h3>
 
@@ -145,8 +175,9 @@ const submit = () => {
                                 <input
                                     v-model="form.diagnosa"
                                     type="text"
+                                    :required="form.status === 'Selesai'"
                                     placeholder="Misal: F20.0 atau Skizofrenia"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500"
                                 />
                                 <div
                                     v-if="form.errors.diagnosa"
@@ -163,9 +194,10 @@ const submit = () => {
                                 >
                                 <textarea
                                     v-model="form.obat"
+                                    :required="form.status === 'Selesai'"
                                     rows="3"
                                     placeholder="Tuliskan nama obat dan dosis..."
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500"
                                 ></textarea>
                                 <div
                                     v-if="form.errors.obat"
@@ -184,7 +216,7 @@ const submit = () => {
                                     v-model="form.catatan_dokter"
                                     rows="2"
                                     placeholder="Catatan perilaku atau saran medis..."
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500"
                                 ></textarea>
                             </div>
                         </div>
@@ -198,7 +230,12 @@ const submit = () => {
                             <button
                                 type="submit"
                                 :disabled="form.processing"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition disabled:opacity-50"
+                                :class="
+                                    form.status === 'Selesai'
+                                        ? 'bg-emerald-600 hover:bg-emerald-700'
+                                        : 'bg-blue-600 hover:bg-blue-700'
+                                "
+                                class="text-white px-8 py-3 rounded-lg font-bold shadow-lg transition disabled:opacity-50"
                             >
                                 {{
                                     form.status === "Selesai"
