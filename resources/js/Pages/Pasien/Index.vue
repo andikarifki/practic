@@ -53,9 +53,9 @@ const hapusPasien = (id) => {
                             <thead class="bg-emerald-50">
                                 <tr>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-emerald-700 uppercase tracking-wider"
+                                        class="px-6 py-3 text-left text-xs font-bold text-emerald-700 uppercase tracking-wider w-10"
                                     >
-                                        NIK
+                                        No
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-bold text-emerald-700 uppercase tracking-wider"
@@ -81,19 +81,24 @@ const hapusPasien = (id) => {
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
                                 <tr
-                                    v-for="pasien in pasiens"
+                                    v-for="(pasien, index) in pasiens"
                                     :key="pasien.id"
                                     class="hover:bg-emerald-50 transition"
                                 >
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono"
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium"
                                     >
-                                        {{ pasien.nik }}
+                                        {{ index + 1 }}
                                     </td>
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800"
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 max-w-[200px] overflow-hidden"
                                     >
-                                        {{ pasien.nama }}
+                                        <div
+                                            class="truncate"
+                                            :title="pasien.nama"
+                                        >
+                                            {{ pasien.nama }}
+                                        </div>
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
@@ -188,7 +193,7 @@ const hapusPasien = (id) => {
 
                                 <tr v-if="pasiens.length === 0">
                                     <td
-                                        colspan="5"
+                                        colspan="6"
                                         class="px-6 py-10 text-center text-gray-400 italic"
                                     >
                                         Belum ada data pasien.
