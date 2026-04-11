@@ -8,10 +8,18 @@ use Inertia\Inertia;
 
 class TempatBerobatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('TempatBerobat/Index', [
-            'tempats' => TempatBerobat::all(),
+            'tempats' => TempatBerobat::query()
+                // Filter pencarian berdasarkan nama_tempat saja
+                ->when($request->search, function ($query, $search) {
+                    $query->where('nama_tempat', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(10)
+                ->withQueryString(), // Menjaga query parameter saat pindah halaman
+            'filters' => $request->only(['search']),
         ]);
     }
 
@@ -24,26 +32,22 @@ class TempatBerobatController extends Controller
     {
         $validated = $request->validate([
             'nama_tempat' => 'required|string|max:255',
-            'alamat' => 'nullable|string',
+            // Alamat dihapus dari sini
         ]);
 
         TempatBerobat::create($validated);
 
-        // Ubah bagian ini agar mengarah ke route index tempat berobat
-        return redirect()->route('tempat.index')->with('message', 'Tempat praktik berhasil ditambahkan!');
-    }
-
-    public function destroy(TempatBerobat $tempatBerobat)
-    {
-        $tempatBerobat->delete();
-
-        return redirect()->back();
+        return redirect()->route('tempat.index')->with('message', 'Data berhasil ditambah');
     }
 
     public function edit(TempatBerobat $tempatBerobat)
     {
         return Inertia::render('TempatBerobat/Edit', [
-            'tempat' => $tempatBerobat,
+            'tempat' => [
+                'id' => $tempatBerobat->id,
+                'nama_tempat' => $tempatBerobat->nama_tempat,
+                // Alamat tidak dikirim ke view Edit
+            ],
         ]);
     }
 
@@ -51,11 +55,18 @@ class TempatBerobatController extends Controller
     {
         $validated = $request->validate([
             'nama_tempat' => 'required|string|max:255',
-            'alamat' => 'nullable|string',
+            // Alamat dihapus dari sini
         ]);
 
         $tempatBerobat->update($validated);
 
-        return redirect()->route('tempat.index')->with('message', 'Tempat berhasil diperbarui!');
+        return redirect()->route('tempat.index')->with('message', 'Data berhasil diubah');
+    }
+
+    public function destroy(TempatBerobat $tempatBerobat)
+    {
+        $tempatBerobat->delete();
+
+        return redirect()->back();
     }
 }

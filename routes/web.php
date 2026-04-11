@@ -44,15 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Rute Pasien yang sudah ada...
-
-    // Rute Master Tempat Berobat
     Route::get('/tempat-berobat', [TempatBerobatController::class, 'index'])->name('tempat.index');
     Route::get('/tempat-berobat/create', [TempatBerobatController::class, 'create'])->name('tempat.create');
     Route::post('/tempat-berobat', [TempatBerobatController::class, 'store'])->name('tempat.store');
-    Route::delete('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'destroy'])->name('tempat.destroy');
     Route::get('/tempat-berobat/{tempatBerobat}/edit', [TempatBerobatController::class, 'edit'])->name('tempat.edit');
     Route::put('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'update'])->name('tempat.update');
+    Route::delete('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'destroy'])->name('tempat.destroy');
 });
 
 Route::middleware(['auth'])->group(function () {
