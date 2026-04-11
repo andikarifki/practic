@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory; // Tambahkan ini jika pakai factory
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model; // HARUS ADA INI
 
 class Pasien extends Model
 {
@@ -23,4 +24,26 @@ class Pasien extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Membuat No RM otomatis dari ID
+     * Contoh: ID 1 menjadi RM-000001
+     */
+    protected function noRm(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => 'RM-'.str_pad($this->id, 6, '0', STR_PAD_LEFT),
+        );
+    }
+
+    /**
+     * Daftarkan no_rm agar muncul di JSON (Inertia/Vue)
+     */
+    protected $appends = ['no_rm'];
+
+    // Relasi ke Pendaftaran (Opsional, tapi berguna)
+    public function pendaftarans()
+    {
+        return $this->hasMany(Pendaftaran::class);
+    }
 }

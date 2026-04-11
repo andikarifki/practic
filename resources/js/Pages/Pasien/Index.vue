@@ -60,6 +60,11 @@ const hapusPasien = (id) => {
                                     <th
                                         class="px-6 py-3 text-left text-xs font-bold text-emerald-700 uppercase tracking-wider"
                                     >
+                                        No. RM
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-emerald-700 uppercase tracking-wider"
+                                    >
                                         Nama
                                     </th>
                                     <th
@@ -89,6 +94,11 @@ const hapusPasien = (id) => {
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium"
                                     >
                                         {{ index + 1 }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-mono text-emerald-700 font-bold"
+                                    >
+                                        {{ pasien.no_rm }}
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 max-w-[200px] overflow-hidden"
