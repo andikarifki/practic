@@ -11,21 +11,28 @@ class PasienController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Pasien/Index', [
-            // Menggunakan query() agar bisa ditambahkan filter kondisional
             'pasiens' => Pasien::query()
                 ->when($request->search, function ($query, $search) {
-                    // Logika Cerdas:
-                    // Jika user mengetik 'RM-000001', kita bersihkan agar hanya mengambil angka '1'
+                    // Logika Cerdas: Membersihkan prefix 'RM-' dan padding nol
                     $cleanSearch = ltrim(str_replace('RM-', '', $search), '0');
 
-                    $query->where('nama', 'like', "%{$search}%")
-                        ->orWhere('id', $cleanSearch)
-                        ->orWhere('nik', 'like', "%{$search}%"); // Tambahan: cari berdasarkan NIK juga
+                    // Menggunakan parameter grouping agar OR tidak merusak query utama
+                    $query->where(function ($q) use ($search, $cleanSearch) {
+                        $q->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nik', 'like', "%{$search}%");
+
+                        // Hanya cari berdasarkan ID jika cleanSearch berisi angka
+                        if (is_numeric($cleanSearch) && $cleanSearch !== '') {
+                            $q->orWhere('id', $cleanSearch);
+                        }
+                    });
                 })
                 ->latest()
-                ->get(),
+                // Ubah ->get() menjadi ->paginate()
+                // withQueryString() penting agar saat pindah halaman, keyword pencarian tidak hilang
+                ->paginate(10)
+                ->withQueryString(),
 
-            // Kirim balik inputan search ke Vue agar kolom input tidak kosong setelah loading
             'filters' => $request->only(['search']),
         ]);
     }

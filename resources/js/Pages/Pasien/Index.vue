@@ -5,14 +5,13 @@ import { ref, watch } from "vue";
 import debounce from "lodash/debounce";
 
 const props = defineProps({
-    pasiens: Array,
+    // Sekarang pasiens adalah Object (Pagination), bukan lagi Array
+    pasiens: Object,
     filters: Object,
 });
 
-// Inisialisasi search dari props agar data tetap ada setelah reload
 const search = ref(props.filters?.search || "");
 
-// Watcher untuk search dengan debounce 500ms
 watch(
     search,
     debounce((value) => {
@@ -24,16 +23,12 @@ watch(
     }, 500),
 );
 
-// Fungsi reset untuk membersihkan input melalui tanda X
 const resetSearch = () => {
     search.value = "";
     router.get(
         route("pasien.index"),
         {},
-        {
-            preserveState: true,
-            replace: true,
-        },
+        { preserveState: true, replace: true },
     );
 };
 
@@ -95,20 +90,17 @@ const hapusPasien = (id) => {
                                 />
                             </svg>
                         </span>
-
                         <input
                             v-model="search"
                             type="text"
                             placeholder="Cari Nama atau No. RM..."
                             class="block w-full pl-10 pr-10 py-2.5 border border-emerald-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm shadow-sm transition"
                         />
-
                         <button
                             v-if="search"
                             @click="resetSearch"
                             type="button"
                             class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 transition"
-                            title="Hapus pencarian"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -167,14 +159,19 @@ const hapusPasien = (id) => {
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
                                 <tr
-                                    v-for="(pasien, index) in pasiens"
+                                    v-for="(pasien, index) in pasiens.data"
                                     :key="pasien.id"
                                     class="hover:bg-emerald-50 transition"
                                 >
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium"
                                     >
-                                        {{ index + 1 }}
+                                        {{
+                                            (pasiens.current_page - 1) *
+                                                pasiens.per_page +
+                                            index +
+                                            1
+                                        }}
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-mono text-emerald-700 font-bold"
@@ -182,7 +179,8 @@ const hapusPasien = (id) => {
                                         {{ pasien.no_rm }}
                                     </td>
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800"
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 max-w-[200px] truncate"
+                                        :title="pasien.nama"
                                     >
                                         {{ pasien.nama }}
                                     </td>
@@ -227,7 +225,6 @@ const hapusPasien = (id) => {
                                                     />
                                                 </svg>
                                             </Link>
-
                                             <Link
                                                 :href="
                                                     route(
@@ -251,7 +248,6 @@ const hapusPasien = (id) => {
                                                     />
                                                 </svg>
                                             </Link>
-
                                             <button
                                                 @click="hapusPasien(pasien.id)"
                                                 class="text-red-500 hover:text-red-700 transition transform hover:scale-110"
@@ -273,7 +269,7 @@ const hapusPasien = (id) => {
                                     </td>
                                 </tr>
 
-                                <tr v-if="pasiens.length === 0">
+                                <tr v-if="pasiens.data.length === 0">
                                     <td
                                         colspan="6"
                                         class="px-6 py-10 text-center text-gray-400 italic"
@@ -283,6 +279,38 @@ const hapusPasien = (id) => {
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <div
+                        class="bg-gray-50 px-6 py-4 border-t border-emerald-100 flex items-center justify-between"
+                    >
+                        <div class="text-sm text-gray-600">
+                            Menampilkan {{ pasiens.from || 0 }} sampai
+                            {{ pasiens.to || 0 }} dari {{ pasiens.total }} data
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            <template
+                                v-for="(link, k) in pasiens.links"
+                                :key="k"
+                            >
+                                <div
+                                    v-if="link.url === null"
+                                    class="px-3 py-1 text-sm border rounded text-gray-400 border-gray-200"
+                                    v-html="link.label"
+                                />
+                                <Link
+                                    v-else
+                                    :href="link.url"
+                                    class="px-3 py-1 text-sm border rounded transition hover:bg-emerald-50 focus:border-emerald-500 focus:text-emerald-500"
+                                    :class="{
+                                        'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700':
+                                            link.active,
+                                    }"
+                                    v-html="link.label"
+                                    preserve-scroll
+                                />
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
