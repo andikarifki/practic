@@ -73,4 +73,22 @@ class PasienController extends Controller
 
         return redirect()->route('pasien.index')->with('message', 'Data pasien berhasil diperbarui!');
     }
+
+    public function show($id)
+    {
+        $pasien = Pasien::findOrFail($id);
+
+        return Inertia::render('Pasien/Show', [
+            'pasien' => [
+                'id' => $pasien->id,
+                'nama' => $pasien->nama,
+                'nik' => $pasien->nik,
+                'nomor_hp' => $pasien->nomor_hp,
+                'alamat' => $pasien->alamat,
+                'jenis_kelamin' => $pasien->jenis_kelamin,
+                'tanggal_lahir' => $pasien->tanggal_lahir?->format('d F Y') ?? '-',
+                'dibuat_pada' => $pasien->created_at?->format('d M Y') ?? '-',
+            ],
+        ]);
+    }
 }

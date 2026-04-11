@@ -40,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/pasien/{pasien}', [PasienController::class, 'destroy'])->name('pasien.destroy');
     Route::get('/pasien/{pasien}/edit', [PasienController::class, 'edit'])->name('pasien.edit');
     Route::put('/pasien/{pasien}', [PasienController::class, 'update'])->name('pasien.update');
+    Route::get('/pasien/{id}', [PasienController::class, 'show'])->name('pasien.show');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
