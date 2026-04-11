@@ -32,6 +32,7 @@ class PasienController extends Controller
             'nik' => 'required|numeric|digits:16|unique:pasiens,nik',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
             'nomor_hp' => 'nullable|string|max:15',
             'alamat' => 'nullable|string',
         ]);
@@ -54,8 +55,17 @@ class PasienController extends Controller
 
     public function edit(Pasien $pasien)
     {
+        // Kita perlu memformat tanggal_lahir ke Y-m-d agar input HTML type="date" bisa membacanya
         return Inertia::render('Pasien/Edit', [
-            'pasien' => $pasien,
+            'pasien' => [
+                'id' => $pasien->id,
+                'nik' => $pasien->nik,
+                'nama' => $pasien->nama,
+                'jenis_kelamin' => $pasien->jenis_kelamin,
+                'nomor_hp' => $pasien->nomor_hp,
+                'alamat' => $pasien->alamat,
+                'tanggal_lahir' => $pasien->tanggal_lahir?->format('Y-m-d'), // PENTING
+            ],
         ]);
     }
 
@@ -65,10 +75,12 @@ class PasienController extends Controller
             'nik' => 'required|numeric|digits:16|unique:pasiens,nik,'.$pasien->id,
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
             'nomor_hp' => 'nullable|string|max:15',
             'alamat' => 'nullable|string',
         ]);
 
+        // Update data menggunakan hasil validasi
         $pasien->update($validated);
 
         return redirect()->route('pasien.index')->with('message', 'Data pasien berhasil diperbarui!');

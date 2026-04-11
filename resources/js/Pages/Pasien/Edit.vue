@@ -11,6 +11,7 @@ const form = useForm({
     nik: props.pasien.nik,
     nama: props.pasien.nama,
     jenis_kelamin: props.pasien.jenis_kelamin,
+    tanggal_lahir: props.pasien.tanggal_lahir, // Tambahkan ini
     nomor_hp: props.pasien.nomor_hp,
     alamat: props.pasien.alamat,
 });
@@ -82,7 +83,24 @@ const submit = () => {
                                 <option value="Perempuan">Perempuan</option>
                             </select>
                         </div>
-
+                        <div>
+                            <label
+                                class="block font-medium text-sm text-gray-700"
+                                >Tanggal Lahir</label
+                            >
+                            <input
+                                v-model="form.tanggal_lahir"
+                                type="date"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                required
+                            />
+                            <div
+                                v-if="form.errors.tanggal_lahir"
+                                class="text-red-500 text-xs mt-1"
+                            >
+                                {{ form.errors.tanggal_lahir }}
+                            </div>
+                        </div>
                         <div>
                             <label
                                 class="block font-medium text-sm text-gray-700"

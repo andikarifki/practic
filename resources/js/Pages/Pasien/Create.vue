@@ -10,6 +10,7 @@ const form = useForm({
     nik: "",
     nama: "",
     jenis_kelamin: "",
+    tanggal_lahir: "", // Tambahkan ini
     nomor_hp: "",
     alamat: "",
 });
@@ -49,7 +50,6 @@ const submit = () => {
                                 :message="form.errors.nik"
                             />
                         </div>
-
                         <div>
                             <InputLabel for="nama" value="Nama Lengkap" />
                             <TextInput
@@ -96,7 +96,23 @@ const submit = () => {
                                 :message="form.errors.jenis_kelamin"
                             />
                         </div>
-
+                        <div>
+                            <InputLabel
+                                for="tanggal_lahir"
+                                value="Tanggal Lahir"
+                            />
+                            <TextInput
+                                id="tanggal_lahir"
+                                v-model="form.tanggal_lahir"
+                                type="date"
+                                class="mt-1 block w-full"
+                                required
+                            />
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.tanggal_lahir"
+                            />
+                        </div>
                         <div>
                             <InputLabel for="nomor_hp" value="Nomor HP" />
                             <TextInput
