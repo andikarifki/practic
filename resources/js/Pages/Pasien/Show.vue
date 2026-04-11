@@ -1,24 +1,32 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const props = defineProps({
     pasien: Object,
 });
 
 /**
- * Fungsi untuk mengarahkan ke WhatsApp
- * Menghapus karakter non-digit dan memastikan kode negara 62
+ * Logika format RM: Mengambil 'id' dan merubahnya menjadi 'RM-000001'
+ * Ini memastikan tampilan konsisten dengan cara kerja search di Controller
  */
-const hubungiWA = (nomor, nama) => {
-    let cleanNumber = nomor.replace(/\D/g, ""); // Hapus semua karakter kecuali angka
+const formatRM = computed(() => {
+    return `RM-${String(props.pasien.id).padStart(6, "0")}`;
+});
+
+/**
+ * Fungsi untuk mengarahkan ke WhatsApp
+ */
+const hubungiWA = (nomor, nama, rm) => {
+    let cleanNumber = nomor.replace(/\D/g, "");
 
     if (cleanNumber.startsWith("0")) {
         cleanNumber = "62" + cleanNumber.substring(1);
     }
 
     const pesan = encodeURIComponent(
-        `Halo Bapak/Ibu ${nama}, ada yang bisa kami bantu terkait layanan kesehatan Anda?`,
+        `Halo Bapak/Ibu ${nama} (${rm}), ada yang bisa kami bantu terkait layanan kesehatan Anda?`,
     );
     window.open(`https://wa.me/${cleanNumber}?text=${pesan}`, "_blank");
 };
@@ -51,7 +59,7 @@ const hubungiWA = (nomor, nama) => {
                     >
                         <div class="flex items-center gap-6">
                             <div
-                                class="h-20 w-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold uppercase"
+                                class="h-20 w-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold uppercase shadow-inner"
                             >
                                 {{ pasien.nama.charAt(0) }}
                             </div>
@@ -59,9 +67,12 @@ const hubungiWA = (nomor, nama) => {
                                 <h3 class="text-2xl font-bold">
                                     {{ pasien.nama }}
                                 </h3>
-                                <p class="text-blue-100 italic">
-                                    Terdaftar sejak: {{ pasien.dibuat_pada }}
-                                </p>
+                                <div class="flex flex-col gap-1 mt-1">
+                                    <p class="text-blue-100 text-sm italic">
+                                        Terdaftar sejak:
+                                        {{ pasien.dibuat_pada }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,11 +81,21 @@ const hubungiWA = (nomor, nama) => {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <section>
                                 <h4
-                                    class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4"
+                                    class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b pb-1"
                                 >
                                     Identitas Utama
                                 </h4>
                                 <div class="space-y-4">
+                                    <div>
+                                        <label class="text-xs text-gray-500"
+                                            >Nomor Rekam Medis (RM)</label
+                                        >
+                                        <p
+                                            class="font-bold text-blue-700 text-lg font-mono"
+                                        >
+                                            {{ formatRM }}
+                                        </p>
+                                    </div>
                                     <div>
                                         <label class="text-xs text-gray-500"
                                             >NIK (Nomor Induk
@@ -88,7 +109,9 @@ const hubungiWA = (nomor, nama) => {
                                         <label class="text-xs text-gray-500"
                                             >Jenis Kelamin</label
                                         >
-                                        <p class="font-semibold text-gray-800">
+                                        <p
+                                            class="font-semibold text-gray-800 uppercase text-sm"
+                                        >
                                             {{ pasien.jenis_kelamin || "-" }}
                                         </p>
                                     </div>
@@ -105,7 +128,7 @@ const hubungiWA = (nomor, nama) => {
 
                             <section>
                                 <h4
-                                    class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4"
+                                    class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b pb-1"
                                 >
                                     Kontak & Alamat
                                 </h4>
@@ -127,10 +150,10 @@ const hubungiWA = (nomor, nama) => {
                                                     hubungiWA(
                                                         pasien.nomor_hp,
                                                         pasien.nama,
+                                                        formatRM,
                                                     )
                                                 "
-                                                class="flex items-center gap-1 px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-[10px] rounded shadow-sm transition-colors"
-                                                title="Hubungi via WhatsApp"
+                                                class="flex items-center gap-1 px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-[10px] rounded shadow-sm transition-colors font-bold"
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +175,7 @@ const hubungiWA = (nomor, nama) => {
                                             >Alamat Lengkap</label
                                         >
                                         <p
-                                            class="font-semibold text-gray-800 leading-relaxed"
+                                            class="font-semibold text-gray-800 leading-relaxed italic"
                                         >
                                             {{ pasien.alamat || "-" }}
                                         </p>
@@ -164,7 +187,7 @@ const hubungiWA = (nomor, nama) => {
                         <div class="mt-10 pt-6 border-t flex gap-3">
                             <Link
                                 :href="route('pasien.edit', pasien.id)"
-                                class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition shadow-md"
+                                class="bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg active:scale-95"
                             >
                                 Edit Data Pasien
                             </Link>
