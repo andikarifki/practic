@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::get('/pendaftaran/{pendaftaran}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
     Route::put('/pendaftaran/{pendaftaran}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+    Route::get('/pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
 });
 Route::middleware(['auth', 'verified'])->group(function () {
     // ... route pendaftaran atau dashboard kamu yang lain ...

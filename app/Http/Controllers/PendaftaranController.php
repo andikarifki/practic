@@ -95,4 +95,26 @@ class PendaftaranController extends Controller
 
         return redirect()->back()->with('message', 'Data berhasil dihapus!');
     }
+
+    public function show($id)
+    {
+        // Mengambil pendaftaran beserta data pasien dan tempat berobat
+        $pendaftaran = Pendaftaran::with(['pasien', 'tempat_berobat'])->findOrFail($id);
+
+        return Inertia::render('Pendaftaran/Show', [
+            'pendaftaran' => [
+                'id' => $pendaftaran->id,
+                'tanggal' => $pendaftaran->tanggal_periksa,
+                'status' => $pendaftaran->status,
+                'keluhan' => $pendaftaran->keluhan,
+                'pasien' => [
+                    'nama' => $pendaftaran->pasien->nama,
+                    'nik' => $pendaftaran->pasien->nik,
+                    'nomor_hp' => $pendaftaran->pasien->nomor_hp,
+                    'alamat' => $pendaftaran->pasien->alamat,
+                ],
+                'tempat' => $pendaftaran->tempat_berobat->nama_tempat,
+            ],
+        ]);
+    }
 }

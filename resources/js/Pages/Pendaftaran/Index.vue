@@ -12,7 +12,7 @@ const hapus = (id) => {
 
 // Fungsi pembantu untuk warna status agar lebih rapi
 const statusClass = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
         case "selesai":
             return "bg-blue-100 text-blue-800";
         case "antri":
@@ -95,13 +95,13 @@ const statusClass = (status) => {
                                 >
                                     {{ item.tanggal_periksa }}
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">
-                                    {{ item.pasien.nama }}
-                                </td>
                                 <td
-                                    class="px-6 py-4 text-sm text-gray-700 font-bold"
+                                    class="px-6 py-4 text-sm text-gray-700 font-semibold"
                                 >
-                                    {{ item.tempat_berobat.nama_tempat }}
+                                    {{ item.pasien?.nama }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-700">
+                                    {{ item.tempat_berobat?.nama_tempat }}
                                 </td>
                                 <td
                                     class="px-6 py-4 text-sm text-gray-500 italic max-w-xs truncate"
@@ -122,6 +122,37 @@ const statusClass = (status) => {
                                     <div
                                         class="flex justify-end items-center space-x-3"
                                     >
+                                        <Link
+                                            :href="
+                                                route(
+                                                    'pendaftaran.show',
+                                                    item.id,
+                                                )
+                                            "
+                                            class="text-emerald-600 hover:text-emerald-900 transition-colors"
+                                            title="Lihat Detail Pendaftaran"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="2"
+                                                stroke="currentColor"
+                                                class="w-5 h-5"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                                                />
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                            </svg>
+                                        </Link>
+
                                         <Link
                                             :href="
                                                 route(
