@@ -1,10 +1,29 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
+import { ref, watch } from "vue"; // Tambahkan ref dan watch
+import debounce from "lodash/debounce"; // Import lodash
 
-defineProps({
+// Tambahkan filters di props
+const props = defineProps({
     pasiens: Array,
+    filters: Object,
 });
+
+// Inisialisasi search dengan nilai dari props (agar teks tidak hilang saat refresh)
+const search = ref(props.filters?.search || "");
+
+// Watcher untuk search dengan debounce 500ms
+watch(
+    search,
+    debounce((value) => {
+        router.get(
+            route("pasien.index"),
+            { search: value },
+            { preserveState: true, replace: true },
+        );
+    }, 500),
+);
 
 const hapusPasien = (id) => {
     if (confirm("Apakah Anda yakin ingin menghapus data pasien ini?")) {
@@ -45,6 +64,34 @@ const hapusPasien = (id) => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="mb-6 flex justify-between items-center">
+                    <div class="relative w-full max-w-md">
+                        <span
+                            class="absolute inset-y-0 left-0 flex items-center pl-3"
+                        >
+                            <svg
+                                class="w-5 h-5 text-emerald-500"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                />
+                            </svg>
+                        </span>
+                        <input
+                            v-model="search"
+                            type="text"
+                            placeholder="Cari Nama atau No. RM..."
+                            class="block w-full pl-10 pr-3 py-2 border border-emerald-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm shadow-sm transition"
+                        />
+                    </div>
+                </div>
+
                 <div
                     class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-emerald-100"
                 >
@@ -206,7 +253,7 @@ const hapusPasien = (id) => {
                                         colspan="6"
                                         class="px-6 py-10 text-center text-gray-400 italic"
                                     >
-                                        Belum ada data pasien.
+                                        Data pasien tidak ditemukan.
                                     </td>
                                 </tr>
                             </tbody>

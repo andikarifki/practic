@@ -8,14 +8,25 @@ use Inertia\Inertia;
 
 class PasienController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // 1. Ambil semua data pasien dari database
-        $pasiens = Pasien::all();
-
-        // 2. Kirim data ke file Vue (Inertia)
         return Inertia::render('Pasien/Index', [
-            'pasiens' => $pasiens,
+            // Menggunakan query() agar bisa ditambahkan filter kondisional
+            'pasiens' => Pasien::query()
+                ->when($request->search, function ($query, $search) {
+                    // Logika Cerdas:
+                    // Jika user mengetik 'RM-000001', kita bersihkan agar hanya mengambil angka '1'
+                    $cleanSearch = ltrim(str_replace('RM-', '', $search), '0');
+
+                    $query->where('nama', 'like', "%{$search}%")
+                        ->orWhere('id', $cleanSearch)
+                        ->orWhere('nik', 'like', "%{$search}%"); // Tambahan: cari berdasarkan NIK juga
+                })
+                ->latest()
+                ->get(),
+
+            // Kirim balik inputan search ke Vue agar kolom input tidak kosong setelah loading
+            'filters' => $request->only(['search']),
         ]);
     }
 
