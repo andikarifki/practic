@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RiwayatMedisController;
 use App\Http\Controllers\TempatBerobatController;
+use App\Models\Pasien;
+use App\Models\Pendaftaran;
+use App\Models\TempatBerobat;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,8 +15,14 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Cari bagian ini di web.php Anda:
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard', [
+        'totalPasien' => Pasien::count(),
+        'totalPraktik' => TempatBerobat::count(), // Sesuaikan dengan nama Model Tempat Berobat Anda
+        'totalPendaftaran' => Pendaftaran::count(), // Sesuaikan jika ini diambil dari Pendaftaran/Riwayat
+        'recentRegistrations' => Pasien::latest()->take(5)->get(),
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -42,8 +53,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/tempat-berobat/{tempatBerobat}/edit', [TempatBerobatController::class, 'edit'])->name('tempat.edit');
     Route::put('/tempat-berobat/{tempatBerobat}', [TempatBerobatController::class, 'update'])->name('tempat.update');
 });
-use App\Http\Controllers\PendaftaranController;
-use App\Http\Controllers\RiwayatMedisController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');

@@ -1,12 +1,14 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref } from "vue";
 
-// Kita pakai data dummy dulu untuk ngetes tampilan
-const totalPasien = ref(120);
-const totalPraktik = ref(45);
-const totalMedicalRecord = ref(350);
+// Menerima props dari Laravel (web.php)
+defineProps({
+    totalPasien: Number,
+    totalPraktik: Number,
+    totalPendaftaran: Number,
+    recentRegistrations: Array,
+});
 </script>
 
 <template>
@@ -14,137 +16,210 @@ const totalMedicalRecord = ref(350);
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Statistik Halaman Utama
+            <h2 class="font-semibold text-xl text-slate-800 leading-tight">
+                Ringkasan Statistik
             </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8"
                 >
                     <div
-                        class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-t-4 border-blue-500 p-6 flex flex-col justify-between"
+                        class="bg-white overflow-hidden shadow-sm sm:rounded-xl border-b-4 border-blue-500 p-6 flex flex-col justify-between transition hover:shadow-md"
                     >
-                        <div>
-                            <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
+                            <div>
                                 <h3
-                                    class="text-gray-500 font-bold text-xs uppercase tracking-wider"
+                                    class="text-slate-500 font-bold text-xs uppercase tracking-wider"
                                 >
                                     Total Pasien
                                 </h3>
-                                <span
-                                    class="p-2 bg-blue-100 rounded-full text-blue-600"
+                                <p
+                                    class="text-4xl font-black text-slate-800 mt-2"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-6 w-6"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                        />
-                                    </svg>
-                                </span>
+                                    {{ totalPasien }}
+                                </p>
                             </div>
-                            <p class="text-4xl font-black text-gray-800 mt-4">
-                                {{ totalPasien }}
-                            </p>
+                            <div
+                                class="p-3 bg-blue-50 rounded-lg text-blue-600"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-8 w-8"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                    />
+                                </svg>
+                            </div>
                         </div>
                         <Link
-                            :href="route('dashboard')"
-                            class="mt-6 text-sm font-semibold text-blue-600 hover:text-blue-800 transition"
+                            :href="route('pasien.index')"
+                            class="mt-6 text-sm font-semibold text-blue-600 hover:text-blue-800"
                         >
-                            Lihat Detail Pasien &rarr;
+                            Kelola Data Pasien &rarr;
                         </Link>
                     </div>
 
                     <div
-                        class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-t-4 border-green-500 p-6 flex flex-col justify-between"
+                        class="bg-white overflow-hidden shadow-sm sm:rounded-xl border-b-4 border-emerald-500 p-6 flex flex-col justify-between transition hover:shadow-md"
                     >
-                        <div>
-                            <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
+                            <div>
                                 <h3
-                                    class="text-gray-500 font-bold text-xs uppercase tracking-wider"
+                                    class="text-slate-500 font-bold text-xs uppercase tracking-wider"
                                 >
                                     Total Praktik
                                 </h3>
-                                <span
-                                    class="p-2 bg-green-100 rounded-full text-green-600"
+                                <p
+                                    class="text-4xl font-black text-slate-800 mt-2"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-6 w-6"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                        />
-                                    </svg>
-                                </span>
+                                    {{ totalPraktik }}
+                                </p>
                             </div>
-                            <p class="text-4xl font-black text-gray-800 mt-4">
-                                {{ totalPraktik }}
-                            </p>
+                            <div
+                                class="p-3 bg-emerald-50 rounded-lg text-emerald-600"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-8 w-8"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </div>
                         </div>
                         <Link
-                            :href="route('dashboard')"
-                            class="mt-6 text-sm font-semibold text-green-600 hover:text-green-800 transition"
+                            :href="route('tempat.index')"
+                            class="mt-6 text-sm font-semibold text-emerald-600 hover:text-emerald-800"
                         >
-                            Riwayat Praktik &rarr;
+                            Lihat Praktik &rarr;
                         </Link>
                     </div>
 
                     <div
-                        class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-t-4 border-red-500 p-6 flex flex-col justify-between"
+                        class="bg-white overflow-hidden shadow-sm sm:rounded-xl border-b-4 border-purple-500 p-6 flex flex-col justify-between transition hover:shadow-md"
                     >
-                        <div>
-                            <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
+                            <div>
                                 <h3
-                                    class="text-gray-500 font-bold text-xs uppercase tracking-wider"
+                                    class="text-slate-500 font-bold text-xs uppercase tracking-wider"
                                 >
-                                    Medical Records
+                                    Pendaftar
                                 </h3>
-                                <span
-                                    class="p-2 bg-red-100 rounded-full text-red-600"
+                                <p
+                                    class="text-4xl font-black text-slate-800 mt-2"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-6 w-6"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                        />
-                                    </svg>
-                                </span>
+                                    {{ totalPendaftaran }}
+                                </p>
                             </div>
-                            <p class="text-4xl font-black text-gray-800 mt-4">
-                                {{ totalMedicalRecord }}
-                            </p>
+                            <div
+                                class="p-3 bg-purple-50 rounded-lg text-purple-600"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-8 w-8"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                </svg>
+                            </div>
                         </div>
                         <Link
-                            :href="route('dashboard')"
-                            class="mt-6 text-sm font-semibold text-red-600 hover:text-red-800 transition"
+                            :href="route('pendaftaran.index')"
+                            class="mt-6 text-sm font-semibold text-purple-600 hover:text-purple-800"
                         >
-                            Buka Rekam Medis &rarr;
+                            Buka Daftar &rarr;
                         </Link>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white overflow-hidden shadow-sm sm:rounded-xl p-6"
+                >
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">
+                        Pendaftaran Terbaru
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-100">
+                                    <th
+                                        class="py-3 px-4 text-sm font-bold text-slate-600"
+                                    >
+                                        Nama Pasien
+                                    </th>
+                                    <th
+                                        class="py-3 px-4 text-sm font-bold text-slate-600"
+                                    >
+                                        Tanggal Daftar
+                                    </th>
+                                    <th
+                                        class="py-3 px-4 text-sm font-bold text-slate-600"
+                                    >
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="pasien in recentRegistrations"
+                                    :key="pasien.id"
+                                    class="border-b border-slate-50 hover:bg-slate-50"
+                                >
+                                    <td
+                                        class="py-3 px-4 text-sm text-slate-700 font-medium"
+                                    >
+                                        {{ pasien.nama }}
+                                    </td>
+                                    <td
+                                        class="py-3 px-4 text-sm text-slate-500"
+                                    >
+                                        {{
+                                            new Date(
+                                                pasien.created_at,
+                                            ).toLocaleDateString("id-ID")
+                                        }}
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span
+                                            class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full"
+                                            >Baru</span
+                                        >
+                                    </td>
+                                </tr>
+                                <tr v-if="recentRegistrations.length === 0">
+                                    <td
+                                        colspan="3"
+                                        class="py-8 text-center text-slate-400"
+                                    >
+                                        Belum ada data pendaftaran.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
