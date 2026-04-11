@@ -1,16 +1,15 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { ref, watch } from "vue"; // Tambahkan ref dan watch
-import debounce from "lodash/debounce"; // Import lodash
+import { ref, watch } from "vue";
+import debounce from "lodash/debounce";
 
-// Tambahkan filters di props
 const props = defineProps({
     pasiens: Array,
     filters: Object,
 });
 
-// Inisialisasi search dengan nilai dari props (agar teks tidak hilang saat refresh)
+// Inisialisasi search dari props agar data tetap ada setelah reload
 const search = ref(props.filters?.search || "");
 
 // Watcher untuk search dengan debounce 500ms
@@ -24,6 +23,19 @@ watch(
         );
     }, 500),
 );
+
+// Fungsi reset untuk membersihkan input melalui tanda X
+const resetSearch = () => {
+    search.value = "";
+    router.get(
+        route("pasien.index"),
+        {},
+        {
+            preserveState: true,
+            replace: true,
+        },
+    );
+};
 
 const hapusPasien = (id) => {
     if (confirm("Apakah Anda yakin ingin menghapus data pasien ini?")) {
@@ -64,10 +76,10 @@ const hapusPasien = (id) => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-6 flex justify-between items-center">
+                <div class="mb-6 flex items-center">
                     <div class="relative w-full max-w-md">
                         <span
-                            class="absolute inset-y-0 left-0 flex items-center pl-3"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
                         >
                             <svg
                                 class="w-5 h-5 text-emerald-500"
@@ -83,19 +95,41 @@ const hapusPasien = (id) => {
                                 />
                             </svg>
                         </span>
+
                         <input
                             v-model="search"
                             type="text"
                             placeholder="Cari Nama atau No. RM..."
-                            class="block w-full pl-10 pr-3 py-2 border border-emerald-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm shadow-sm transition"
+                            class="block w-full pl-10 pr-10 py-2.5 border border-emerald-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm shadow-sm transition"
                         />
+
+                        <button
+                            v-if="search"
+                            @click="resetSearch"
+                            type="button"
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 transition"
+                            title="Hapus pencarian"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
                 <div
                     class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-emerald-100"
                 >
-                    <div class="p-6">
+                    <div class="p-6 overflow-x-auto">
                         <table class="min-w-full divide-y divide-emerald-200">
                             <thead class="bg-emerald-50">
                                 <tr>
@@ -148,14 +182,9 @@ const hapusPasien = (id) => {
                                         {{ pasien.no_rm }}
                                     </td>
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 max-w-[200px] overflow-hidden"
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800"
                                     >
-                                        <div
-                                            class="truncate"
-                                            :title="pasien.nama"
-                                        >
-                                            {{ pasien.nama }}
-                                        </div>
+                                        {{ pasien.nama }}
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
@@ -167,7 +196,6 @@ const hapusPasien = (id) => {
                                     >
                                         {{ pasien.nomor_hp }}
                                     </td>
-
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
                                     >
@@ -182,7 +210,6 @@ const hapusPasien = (id) => {
                                                     )
                                                 "
                                                 class="text-blue-500 hover:text-blue-700 transition transform hover:scale-110"
-                                                title="Detail Pasien"
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +236,6 @@ const hapusPasien = (id) => {
                                                     )
                                                 "
                                                 class="text-amber-500 hover:text-amber-700 transition transform hover:scale-110"
-                                                title="Edit Pasien"
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -229,7 +255,6 @@ const hapusPasien = (id) => {
                                             <button
                                                 @click="hapusPasien(pasien.id)"
                                                 class="text-red-500 hover:text-red-700 transition transform hover:scale-110"
-                                                title="Hapus Pasien"
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
