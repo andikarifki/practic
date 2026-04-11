@@ -59,6 +59,11 @@ const hapusTempat = (id) => {
                         <thead class="bg-emerald-50 text-emerald-700">
                             <tr>
                                 <th
+                                    class="w-16 px-6 py-3 text-left text-xs font-bold uppercase tracking-wider"
+                                >
+                                    No
+                                </th>
+                                <th
                                     class="w-1/3 px-6 py-3 text-left text-xs font-bold uppercase tracking-wider"
                                 >
                                     Nama Tempat
@@ -77,10 +82,13 @@ const hapusTempat = (id) => {
                         </thead>
                         <tbody class="divide-y divide-gray-100 bg-white">
                             <tr
-                                v-for="tempat in tempats"
+                                v-for="(tempat, index) in tempats"
                                 :key="tempat.id"
                                 class="hover:bg-emerald-50 transition"
                             >
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    {{ index + 1 }}
+                                </td>
                                 <td
                                     class="px-6 py-4 font-bold text-gray-800 break-words"
                                 >
