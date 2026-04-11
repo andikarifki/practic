@@ -32,7 +32,7 @@ const menuItems = [
     {
         name: "Rekam Medis",
         route: "riwayat.index",
-        icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+        icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-2 4h.01M9 16h5m1-11a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V6a1 1 0 011-1zm-4 10l-2 2 2 2 4-4",
     },
 ];
 </script>
@@ -46,9 +46,6 @@ const menuItems = [
             <div
                 class="h-16 flex items-center px-6 bg-emerald-950/30 overflow-hidden whitespace-nowrap"
             >
-                <ApplicationLogo
-                    class="h-8 w-8 fill-current text-emerald-400 shrink-0"
-                />
                 <span
                     v-show="isSidebarOpen"
                     class="ml-3 font-bold text-lg tracking-tight transition-opacity duration-300"
@@ -215,7 +212,7 @@ const menuItems = [
                 <h2
                     class="hidden md:block text-gray-400 text-xs font-bold uppercase tracking-widest"
                 >
-                    Sistem Apotek Mojosongo
+                    Sistem Informasi Praktik Dr. Johan
                 </h2>
 
                 <div class="flex items-center">

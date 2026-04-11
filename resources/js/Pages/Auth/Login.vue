@@ -34,10 +34,10 @@ const submit = () => {
 
         <div class="mb-8 text-center">
             <h1 class="text-3xl font-black text-emerald-700 tracking-tight">
-                APOTEK <span class="text-gray-800">MOJOSONGO</span>
+                PRAKTIK <span class="text-gray-800">DR. JOHAN</span>
             </h1>
             <p class="text-sm text-gray-500 mt-1">
-                Sistem Informasi Manajemen Inventaris
+                Sistem Informasi Praktik Dr. Johan
             </p>
         </div>
 
@@ -47,7 +47,7 @@ const submit = () => {
 
         <form @submit.prevent="submit" class="bg-white p-2">
             <div>
-                <InputLabel for="email" value="Email Petugas" />
+                <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"
                     type="email"
@@ -130,7 +130,7 @@ const submit = () => {
         </form>
 
         <footer class="mt-8 text-center text-xs text-gray-400">
-            &copy; 2026 Apotek Mojosongo - All Rights Reserved.
+            &copy; 2026 Praktik Dr. Johan - All Rights Reserved.
         </footer>
     </GuestLayout>
 </template>
