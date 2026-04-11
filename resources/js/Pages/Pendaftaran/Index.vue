@@ -57,6 +57,11 @@ const statusClass = (status) => {
                                     <th
                                         class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider"
                                     >
+                                        No
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider"
+                                    >
                                         Tanggal
                                     </th>
                                     <th
@@ -93,10 +98,15 @@ const statusClass = (status) => {
                             </thead>
                             <tbody class="divide-y divide-gray-100 bg-white">
                                 <tr
-                                    v-for="item in pendaftarans"
+                                    v-for="(item, index) in pendaftarans"
                                     :key="item.id"
                                     class="hover:bg-emerald-50 transition"
                                 >
+                                    <td
+                                        class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                                    >
+                                        {{ index + 1 }}
+                                    </td>
                                     <td
                                         class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
                                     >
@@ -227,7 +237,7 @@ const statusClass = (status) => {
                                 </tr>
                                 <tr v-if="pendaftarans.length === 0">
                                     <td
-                                        colspan="7"
+                                        colspan="8"
                                         class="px-6 py-10 text-center text-gray-400"
                                     >
                                         Belum ada data pendaftaran.
