@@ -20,7 +20,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Tambah Pasien - Apotek Mojosongo" />
+    <Head title="Tambah Pasien" />
 
     <AuthenticatedLayout>
         <template #header>

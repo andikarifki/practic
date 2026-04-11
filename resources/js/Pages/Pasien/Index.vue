@@ -14,7 +14,7 @@ const hapusPasien = (id) => {
 </script>
 
 <template>
-    <Head title="Data Pasien - Apotek Mojosongo" />
+    <Head title="Data Pasien" />
 
     <AuthenticatedLayout>
         <template #header>

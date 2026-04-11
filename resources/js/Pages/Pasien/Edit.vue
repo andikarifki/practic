@@ -22,7 +22,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Edit Pasien - Apotek Mojosongo" />
+    <Head title="Edit Pasien" />
 
     <AuthenticatedLayout>
         <template #header>
