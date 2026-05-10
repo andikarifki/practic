@@ -5,7 +5,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref } from "vue"; // Import ref untuk toggle mata
+import { ref } from "vue";
 
 defineProps({
     status: {
@@ -13,11 +13,11 @@ defineProps({
     },
 });
 
-// State untuk melihat/sembunyi password
 const showPassword = ref(false);
 
 const form = useForm({
-    email: "",
+    // Berubah dari email menjadi name
+    name: "",
     password: "",
 });
 
@@ -47,18 +47,18 @@ const submit = () => {
 
         <form @submit.prevent="submit" class="bg-white p-2">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="name" value="Username" />
                 <TextInput
-                    id="email"
-                    type="email"
+                    id="name"
+                    type="text"
                     class="mt-1 block w-full border-emerald-300 focus:border-emerald-500 focus:ring-emerald-500"
-                    v-model="form.email"
+                    v-model="form.name"
                     required
                     autofocus
-                    placeholder="Masukkan email resmi"
+                    placeholder="Masukkan nama pengguna"
                     autocomplete="username"
                 />
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div class="mt-4">

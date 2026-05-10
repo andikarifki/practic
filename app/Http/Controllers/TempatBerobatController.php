@@ -32,7 +32,7 @@ class TempatBerobatController extends Controller
     {
         $validated = $request->validate([
             'nama_tempat' => 'required|string|max:255',
-            // Alamat dihapus dari sini
+            'alamat' => 'nullable|string', // Tambahkan kembali ini
         ]);
 
         TempatBerobat::create($validated);
@@ -46,7 +46,7 @@ class TempatBerobatController extends Controller
             'tempat' => [
                 'id' => $tempatBerobat->id,
                 'nama_tempat' => $tempatBerobat->nama_tempat,
-                // Alamat tidak dikirim ke view Edit
+                'alamat' => $tempatBerobat->alamat,
             ],
         ]);
     }
@@ -55,7 +55,7 @@ class TempatBerobatController extends Controller
     {
         $validated = $request->validate([
             'nama_tempat' => 'required|string|max:255',
-            // Alamat dihapus dari sini
+            'alamat' => 'nullable|string',
         ]);
 
         $tempatBerobat->update($validated);

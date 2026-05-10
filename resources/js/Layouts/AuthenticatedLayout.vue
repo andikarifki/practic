@@ -144,7 +144,7 @@ const menuItems = [
                     <div class="flex items-center gap-3">
                         <ApplicationLogo class="h-8 w-8 text-emerald-400" />
                         <span class="font-bold text-lg tracking-tight"
-                            >MOJOMEDIC</span
+                            >Praktik Dr. Johan</span
                         >
                     </div>
                     <button
